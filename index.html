@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MindAR + A-Frame — Interação</title>
+
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+    <script>
+      // componente de clique
+      AFRAME.registerComponent("tap-listener", {
+        init: function () {
+          this.el.addEventListener("click", () => {
+            console.log("Objeto tocado!");
+
+            // feedback visual
+            this.el.setAttribute("material", "color", "#00ff88");
+          });
+        },
+      });
+    </script>
+  </head>
+
+  <body style="margin:0; overflow:hidden;">
+    <a-scene
+      mindar-image="imageTargetSrc: targets.mind; autoStart: true;"
+      vr-mode-ui="enabled: false"
+      device-orientation-permission-ui="enabled: true"
+      renderer="colorManagement: true;"
+    >
+
+      <!-- câmera com cursor para toque -->
+      <a-camera>
+        <a-cursor
+          fuse="false"
+          rayOrigin="mouse"
+        ></a-cursor>
+      </a-camera>
+
+      <!-- alvo reconhecido -->
+      <a-entity mindar-image-target="targetIndex: 0">
+        <a-box
+          id="objeto"
+          position="0 0 0"
+          depth="0.12"
+          height="0.12"
+          width="0.12"
+          color="#ff2d2d"
+          tap-listener
+        ></a-box>
+
+        <a-text
+          value="TOQUE NO CUBO"
+          position="0 0.2 0"
+          align="center"
+          width="2"
+          color="white"
+        ></a-text>
+      </a-entity>
+
+    </a-scene>
+  </body>
+</html>
