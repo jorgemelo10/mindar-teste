@@ -3,20 +3,24 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>MindAR + A-Frame — Interação</title>
+    <title>MindAR + A-Frame — Tap iPhone</title>
 
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
     <script>
-      // componente de clique
       AFRAME.registerComponent("tap-listener", {
         init: function () {
-          this.el.addEventListener("click", () => {
-            console.log("Objeto tocado!");
+          const el = this.el;
 
-            // feedback visual
-            this.el.setAttribute("material", "color", "#00ff88");
+          // Para debug
+          el.addEventListener("mouseenter", () => console.log("hover"));
+          el.addEventListener("mouseleave", () => console.log("leave"));
+
+          // Em A-Frame mobile, o "click" vem do cursor com rayOrigin=mouse
+          el.addEventListener("click", () => {
+            console.log("TAP OK!");
+            el.setAttribute("material", "color", "#00ff88");
           });
         },
       });
@@ -30,36 +34,36 @@
       device-orientation-permission-ui="enabled: true"
       renderer="colorManagement: true;"
     >
-
-      <!-- câmera com cursor para toque -->
-      <a-camera>
+      <!-- Câmera + cursor configurado para tocar em .clickable -->
+      <a-camera position="0 0 0" look-controls="enabled: false">
         <a-cursor
-          fuse="false"
           rayOrigin="mouse"
+          fuse="false"
+          raycaster="objects: .clickable"
         ></a-cursor>
       </a-camera>
 
-      <!-- alvo reconhecido -->
+      <!-- Alvo 0 -->
       <a-entity mindar-image-target="targetIndex: 0">
+        <!-- Coloque o cubo um pouco “pra fora” do plano (z positivo) -->
         <a-box
-          id="objeto"
-          position="0 0 0"
+          class="clickable"
+          tap-listener
+          position="0 0 0.2"
           depth="0.12"
           height="0.12"
           width="0.12"
-          color="#ff2d2d"
-          tap-listener
+          material="color: #ff2d2d;"
         ></a-box>
 
         <a-text
           value="TOQUE NO CUBO"
-          position="0 0.2 0"
+          position="0 0.25 0"
           align="center"
           width="2"
           color="white"
         ></a-text>
       </a-entity>
-
     </a-scene>
   </body>
 </html>
